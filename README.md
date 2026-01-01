@@ -16,3 +16,9 @@ For automated multi-server deployment:
 cd ansible
 # Edit inventory.yml with your server IPs
 ansible-playbook -i inventory.yml playbook.yml
+
+## 🔧 Maintenance Commands
+```bash
+sudo systemctl status cyberpunk-api
+sudo journalctl -u cyberpunk-api -f
+```
