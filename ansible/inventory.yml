@@ -1,0 +1,6 @@
+all:
+  hosts:
+    cyberpunk-server:
+      ansible_host: 51.20.191.127  # Your server IP
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: ~/.ssh/Task2.pem

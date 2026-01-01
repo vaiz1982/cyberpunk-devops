@@ -1,0 +1,26 @@
+# Application configuration
+app_name: "cyberpunk-api"
+app_dir: "/opt/{{ app_name }}"
+log_dir: "/var/log/{{ app_name }}"
+
+# Users
+app_user: "www-data"
+app_group: "www-data"
+dev_user: "cyberpunk"
+dev_user_uid: 1001
+dev_user_gid: 1001
+
+# Database
+db_name: "cyberpunk_db"
+db_user: "cyberpunk"
+db_password: "SecurePass2025!"
+root_db_password: "root_password"
+
+# Repository
+repo_url: "https://github.com/AnastasiyaGapochkina01/cyberpunk-devops.git"
+
+# Network
+api_host: "127.0.0.1"
+api_port: 8000
+nginx_host: "0.0.0.0"
+nginx_port: 80

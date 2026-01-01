@@ -1,0 +1,8 @@
+---
+- name: Deploy Cyberpunk API
+  hosts: all
+  become: yes
+  gather_facts: yes
+  
+  roles:
+    - cyberpunk-api

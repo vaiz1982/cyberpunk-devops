@@ -1,0 +1,24 @@
+[Unit]
+Description={{ app_name }}
+After=network.target mariadb.service
+Requires=mariadb.service
+
+[Service]
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_dir }}/api
+EnvironmentFile={{ app_dir }}/api/.env
+ExecStart={{ app_dir }}/venv/bin/uvicorn main:app --host {{ api_host }} --port {{ api_port }}
+Restart=always
+RestartSec=5
+StandardOutput=append:{{ app_dir }}/logs/app.log
+StandardError=append:{{ app_dir }}/logs/error.log
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths={{ app_dir }}/logs {{ app_dir }}/api
+
+[Install]
+WantedBy=multi-user.target

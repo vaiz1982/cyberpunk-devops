@@ -1,0 +1,38 @@
+server {
+    listen {{ nginx_port }};
+    server_name _;
+    
+    root {{ app_dir }}/static;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # Health check endpoint
+    location = /health {
+        proxy_pass http://{{ api_host }}:{{ api_port }}/health;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    # API endpoints
+    location ~ ^/(api|courses|docs|redoc|openapi.json) {
+        proxy_pass http://{{ api_host }}:{{ api_port }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    # Static files
+    location /static/ {
+        alias {{ app_dir }}/static/;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    client_max_body_size 50M;
+}

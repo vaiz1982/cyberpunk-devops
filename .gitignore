@@ -1,18 +1,27 @@
-# System files
-.bash_logout
-.bashrc
-.profile
-.lesshst
-.sudo_as_admin_successful
+# Sensitive data  
+*.pem  
+*.key  
+*.env  
+.vault_pass  
+secrets.yml
 
-# Python
-__pycache__/
-*.pyc
-venv/
-.env
+# Python  
+__pycache__/  
+*.pyc  
+venv/  
+.env/
 
-# Sensitive data
-*.key
-*.pem
-secrets/
-*.env
+# Ansible  
+*.retry
+
+# System  
+.DS_Store  
+Thumbs.db
+
+# Logs  
+logs/  
+*.log
+
+# Database  
+*.db  
+*.sqlite3
