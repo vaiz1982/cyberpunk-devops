@@ -17,10 +17,11 @@ db_password: "SecurePass2025!"
 root_db_password: "root_password"
 
 # Repository
-repo_url: "https://github.com/AnastasiyaGapochkina01/cyberpunk-devops.git"
+repo_url: "https://github.com/vaiz1982/cyberpunk-devops.git"
 
 # Network
 api_host: "127.0.0.1"
 api_port: 8000
 nginx_host: "0.0.0.0"
 nginx_port: 80
+repo_url: "https://github.com/vaiz1982/cyberpunk-devops.git"

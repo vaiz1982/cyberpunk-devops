@@ -8,16 +8,22 @@
       - nginx
       - mariadb-server
       - mariadb-client
+      - python3-pymysql
     state: present
     update_cache: yes
+
+- name: Create development group
+  group:
+    name: "{{ dev_user }}"
+    gid: "{{ dev_user_gid }}"
+    state: present
 
 - name: Create development user
   user:
     name: "{{ dev_user }}"
     uid: "{{ dev_user_uid }}"
-    group: "{{ dev_user_gid }}"
+    group: "{{ dev_user }}"
     shell: /bin/bash
-    system: yes
     create_home: yes
 
 - name: Create application directory
@@ -28,13 +34,19 @@
     group: "{{ app_group }}"
     mode: '0755'
 
+- name: Check if repository already exists
+  stat:
+    path: "{{ app_dir }}/.git"
+  register: repo_exists
+
 - name: Clone repository
   git:
     repo: "{{ repo_url }}"
     dest: "{{ app_dir }}"
     version: master
     force: yes
-  become_user: "{{ app_user }}"
+  when: not repo_exists.stat.exists
+  ignore_errors: yes
 
 - name: Set up directory permissions
   file:
@@ -53,14 +65,18 @@
   command: "python3 -m venv {{ app_dir }}/venv"
   args:
     creates: "{{ app_dir }}/venv/bin/activate"
-  become_user: "{{ app_user }}"
 
 - name: Install Python dependencies
   pip:
     requirements: "{{ app_dir }}/api/requirements.txt"
     virtualenv: "{{ app_dir }}/venv"
     virtualenv_python: python3
-  become_user: "{{ app_user }}"
+
+- name: Install MySQL Python client
+  pip:
+    name: pymysql
+    virtualenv: "{{ app_dir }}/venv"
+    virtualenv_python: python3
 
 - name: Ensure MariaDB is running
   service:
@@ -69,13 +85,11 @@
     enabled: yes
 
 - name: Set MariaDB root password
-  mysql_user:
-    login_user: root
-    login_password: ""
-    name: root
-    password: "{{ root_db_password }}"
-    host: localhost
-    check_implicit_admin: yes
+  shell: |
+    sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ root_db_password }}';" 2>/dev/null || true
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
 
 - name: Create database
   mysql_db:
@@ -96,11 +110,12 @@
     priv: "{{ db_name }}.*:ALL"
     state: present
 
+# FIXED: changed db to login_db
 - name: Create courses table
   mysql_query:
     login_user: root
     login_password: "{{ root_db_password }}"
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"  # CHANGED FROM db TO login_db
     query: |
       CREATE TABLE IF NOT EXISTS courses (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,11 +124,12 @@
         duration VARCHAR(50)
       );
 
+# FIXED: changed db to login_db
 - name: Populate courses data
   mysql_query:
     login_user: root
     login_password: "{{ root_db_password }}"
-    db: "{{ db_name }}"
+    login_db: "{{ db_name }}"  # CHANGED FROM db TO login_db
     query: |
       INSERT IGNORE INTO courses (name, description, duration) VALUES
       ('DevOps Fundamentals', 'Основы DevOps: CI/CD, контейнеризация, мониторинг', '8 недель'),
