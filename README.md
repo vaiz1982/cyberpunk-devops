@@ -1,24 +1,80 @@
-# Cyberpunk DevOps API
+# 🚀 Cyberpunk DevOps API
 
-## Deployment
-- Bash script: `./deploy.sh`
-- Ansible: `ansible-playbook -i inventory.yml playbook.yml`
+Неоновое веб-приложение в стиле Cyberpunk 2077 с REST API для демонстрации DevOps навыков. Статическая главная страница + динамические API эндпоинты с MariaDB.
 
-## URLs
-- http://[IP]/ - Main page
-- http://[IP]/docs - API documentation
+## ✨ Функционал
+- `/health` - Health check с информацией об ОС `{"server": "Linux", "status": "OK"}`
+- `/` - Главная страница в cyberpunk стиле с информацией об авторе
+- `/courses` - Список IT курсов из MariaDB (fallback JSON при ошибке БД)
+- `/docs` - Автогенерируемая Swagger документация FastAPI
 
-## 🚀 Ansible Deployment
+## 🛠 Технологический стек
+- **Frontend**: HTML5 + Cyberpunk CSS + Orbitron/VT323 шрифты
+- **Backend**: Python 3.10+ FastAPI + Uvicorn
+- **Database**: MariaDB 10.6+
+- **Web Server**: Nginx 1.18+
 
-For automated multi-server deployment:
+## ⚙ Конфигурация
+| Переменная | По умолчанию | Описание |
+|------------|--------------|----------|
+| DB_HOST | localhost | Хост MariaDB |
+| DB_USER | cyberpunk | Пользователь БД |
+| DB_PASSWORD | SecurePass2025! | Пароль БД |
+| DB_NAME | cyberpunk_db | Имя базы |
 
+## 🚀 Deployment Options
+
+### Option 1: Bash Script (Quick & Simple)
 ```bash
+chmod +x deploy.sh
+sudo ./deploy.sh
+
+
+
+
 cd ansible
 # Edit inventory.yml with your server IPs
 ansible-playbook -i inventory.yml playbook.yml
 
-## 🔧 Maintenance Commands
-```bash
+
+
+Ansible Structure
+ansible/
+├── playbook.yml          # Main playbook
+├── inventory.yml         # Server inventory
+├── group_vars/all.yml    # Configuration variables
+└── roles/cyberpunk-api/  # Modular role structure
+    ├── tasks/main.yml
+    ├── handlers/main.yml
+    └── templates/
+
+
+
+
+🌐 URLs
+http://[IP]/ - Главная страница
+
+http://[IP]/health - Health check
+
+http://[IP]/courses - API курсов
+
+http://[IP]/docs - Swagger документация
+
+http://[IP]/redoc - ReDoc документация
+
+
+
+
+
+🔧 Maintenance Commands
 sudo systemctl status cyberpunk-api
 sudo journalctl -u cyberpunk-api -f
-```
+sudo tail -f /opt/cyberpunk-api/logs/app.log
+sudo systemctl restart cyberpunk-api
+sudo systemctl reload nginx
+
+
+
+
+📝 License
+MIT
