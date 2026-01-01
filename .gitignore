@@ -1,0 +1,18 @@
+# System files
+.bash_logout
+.bashrc
+.profile
+.lesshst
+.sudo_as_admin_successful
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Sensitive data
+*.key
+*.pem
+secrets/
+*.env
