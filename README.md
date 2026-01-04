@@ -180,8 +180,3 @@ cyberpunk-devops/
 6. ✅ **Improved formatting**
 7. ✅ **Added author info**
 
-## **Push to GitHub:**
-```bash
-cd ~/cyberpunk-devops
-cat > README.md << 'EOF'
-[PASTE THE ABOVE CONTENT]
